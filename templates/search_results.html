@@ -39,10 +39,14 @@
       <ul class="results">
         {% for r in restaurants %}
         <li>
-          <strong>{{ r.name }}</strong> - {{ r.category }} - {{ r.minority_owned
-          }}-owned<br />
+          <strong>
+          <a href="#map" onclick="window._focusRestaurant('{{ r.name }}')"
+            style="cursor:pointer; color: #1a73e8; text-decoration: underline;">
+              {{ r.name }}
+          </a>
+          </strong> - {{ r.category }} - {{ r.minority_owned }}-owned<br />
           <!-- 📍 {{ r.address }}<br /> -->
-          Rating: {{ r.rating }} | Distance: {{ r.distance_km }} km | Score: {{
+          Rating: {{ r.rating }} | Distance: {{ r.distance_mi }} km | Score: {{
           r.score }}
           {% if username %}
           <form action="/favorite/toggle" method="post" style="display:inline;">
@@ -59,9 +63,10 @@
       {% endif %}
       <a href="/">Back Home</a>
     </div>
+
     <script>
     const restaurantData = {{ restaurants | tojson }};
-    
+    window._markers = {};
     window._openInfoWindow = null;
 
     window._closeInfoWindow = function() {
@@ -70,7 +75,15 @@
             window._openInfoWindow = null;
         }
 };
-
+    window._focusRestaurant = function(name) {  // ← new function
+    const data = window._markers[name];
+    if (!data) return;
+        data.map.panTo(data.marker.getPosition());
+        data.map.setZoom(15);
+    if (window._openInfoWindow) window._openInfoWindow.close();
+        data.infoWindow.open(data.map, data.marker);
+        window._openInfoWindow = data.infoWindow;
+    };
 
    
     async function initMap() {
@@ -81,50 +94,48 @@
       });
 
       const geocoder = new google.maps.Geocoder();
-      let openInfoWindow = null;
 
       for (const r of restaurantData) {
         geocoder.geocode({ address: r.address }, (results, status) => {
           if (status === "OK") {
             const marker = new google.maps.Marker({
-              map,
-              position: results[0].geometry.location,
-              title: r.name,
+                map,
+                position: results[0].geometry.location,
+                title: r.name,
             });
              const infoWindow = new google.maps.InfoWindow({
-                    content: `
-                        <div style="padding: 5px;">
-                            <strong>${r.name}</strong><br/>
-                            ${r.address}<br/>
-                            <button onclick="window._closeInfoWindow()"
-                                style="margin-top:8px; cursor:pointer; padding: 3px 8px; border-radius: 4px; border: 1px solid #ccc;">
-                                Close
-                            </button>
-                        </div>
+                content: `
+                    <div style="padding: 5px;">
+                        <strong>${r.name}</strong><br/>
+                        ${r.address}<br/>
+                        <button onclick="window._closeInfoWindow()"
+                            style="margin-top:8px; cursor:pointer; padding: 3px 8px; border-radius: 4px; border: 1px solid #ccc;">
+                            Close
+                        </button>
+                    </div>
                     `
                 });
-            
-            marker.addListener("click", () => {
-              if (window._openInfoWindow === infoWindow) {
-                    infoWindow.close();
-                    window._openInfoWindow = null;
-              } else {
-                    if (window._openInfoWindow) window._openInfoWindow.close();
-                    infoWindow.open(map, marker);
-                    window._openInfoWindow = infoWindow;
-              }
-          });
 
-            infoWindow.addListener("closeclick", () => {
-                openInfoWindow = null;
-            });
+              // Store marker data for external access
+            window._markers[r.name] = { marker, infoWindow, map };
+
+            marker.addListener("click", () => {
+                  if (window._openInfoWindow === infoWindow) {
+                      infoWindow.close();
+                      window._openInfoWindow = null;
+                  } else {
+                      if (window._openInfoWindow) window._openInfoWindow.close();
+                      infoWindow.open(map, marker);
+                      window._openInfoWindow = infoWindow;
+                  }
+              });
+              infoWindow.addListener("closeclick", () => {
+                  window._openInfoWindow = null;
+              });
             }
-          });
-        }
-         map.addListener("click", () => {
-          window._closeInfoWindow();
-    });
-      }
+        });
+     }
+    }          
     </script>
 
     <script
