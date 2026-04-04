@@ -102,8 +102,6 @@ MINORITY_LIST = [
 ]
 
 def get_nearby_ranked(lat, lon, radius_m=5000, minority_owned=None):
-    api_key = 'unksOTGmrK1Je7maJwHNmXehQnchaSCCZwKyn-lx_u5dkj_DVfKayIqL6vyWxCo7PD4oJZoJOyVfFHoFo9gPGm1axz9j2EuNyBZtfx338Q4eUHWsWHW6bjHyzgjQaXYx'
-    print("DEBUG: get_nearby_ranked called with", lat, lon, radius_m, minority_owned)
     headers = {"Authorization": f"Bearer {YELP_API_KEY}"}
 
     search_list = MINORITY_LIST
