@@ -1,0 +1,100 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #b0e0e6;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.corner-img {
+  position: absolute;
+  width: 350px;
+  height: auto;
+  z-index: -1;
+  opacity: 0.8;
+
+  transform: rotate(-20deg);
+  transition: transform 0.3s ease;
+}
+.top-left {
+  top: 10px;
+  left: 20px;
+}
+
+.top-right {
+  transform: rotate(10deg);
+}
+
+.bottom-left {
+  transform: rotate(10deg);
+}
+.bottom-right {
+  position: absolute;
+  bottom: -00px;
+  right: -00px;
+  width: 450px;
+  height: auto;
+  transform: rotate(30deg);
+  z-index: -1;
+}
+
+.container {
+  width: 90%;
+  max-width: 500px;
+  padding: 40px;
+  background-color: #77c7f0; /* Light Sky Blue */
+  border-radius: 25px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+h1 {
+  margin-bottom: 50px;
+  font-size: 2.5em;
+  text-align: center;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input,
+select,
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #6899ee;
+  font-size: 1em;
+}
+
+button {
+  background-color: #6899ee;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  background-color: #6899ee;
+  transform: scale(1.05);
+}
+
+.user-auth a {
+  color: #000000;
+  text-decoration: underline;
+}

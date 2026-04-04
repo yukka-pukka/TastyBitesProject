@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>TastyBites - Search Results</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Restaurants Near You</h1>
+      {% if minority_owned %}
+      <h3>Filtered by: {{ minority_owned }}-owned</h3>
+      {% endif %} {% if restaurants %}
+      <ul class="results">
+        {% for r in restaurants %}
+        <li>
+          <strong>{{ r.name }}</strong> - {{ r.category }} - {{ r.minority_owned
+          }}-owned<br />
+          Rating: {{ r.rating }} | Distance: {{ r.distance_km }} km | Score: {{
+          r.score }}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No restaurants found in this area.</p>
+      {% endif %}
+      <a href="/">Back Home</a>
+    </div>
+  </body>
+</html>
