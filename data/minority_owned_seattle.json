@@ -4,19 +4,51 @@
     "minority_owned": "Black"
   },
   {
+    "name": "Boon Boona Coffee",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Cafe Avole",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Jebena Cafe",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Zagol Ethiopian Restaurant",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Communion Restaurant & Bar",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Simply Soulful Cafe & Espresso",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Island Soul Rum Bar & Soul Shack",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Pam's Kitchen",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Taste of the Caribbean",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Café Campagne",
+    "minority_owned": "Black"
+  },
+  {
     "name": "Fat's Chicken and Waffles",
     "minority_owned": "Black"
   },
   {
     "name": "Habesha Cafe",
-    "minority_owned": "Black"
-  },
-  {
-    "name": "Island Soul",
-    "minority_owned": "Black"
-  },
-  {
-    "name": "Simply Soulful",
     "minority_owned": "Black"
   },
   {
@@ -40,10 +72,6 @@
     "minority_owned": "Black"
   },
   {
-    "name": "Cafe Campagne",
-    "minority_owned": "Black"
-  },
-  {
     "name": "Boon Boona Coffee",
     "minority_owned": "Black"
   },
@@ -60,19 +88,167 @@
     "minority_owned": "Black"
   },
   {
-    "name": "Asadero Prime",
+    "name": "Asadero Ballard",
     "minority_owned": "Latinx"
   },
   {
-    "name": "Westman’s Bagel & Coffee",
+    "name": "Westman's Bagel & Coffee",
     "minority_owned": "Latinx"
   },
   {
-    "name": "Askatu Bakery",
+    "name": "Askatu Bakery Cafe",
     "minority_owned": "Latinx"
   },
   {
-    "name": "Nue",
+    "name": "Bonito Cafe y Mercadito",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "D' La Santa Mexican Cuisine & Grill",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Don Lucho's Restaurant",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Gordito's",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Guanaco's Tacos Pupuseria",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "La Carta De Oaxaca",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Resistencia Coffee",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Fulcrum Cafe",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Cafe Con Leche",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Los Tomaleros",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Olé Café",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "La Cabana",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Jalisco Mexican Restaurant",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Santo Coffee Co.",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "El Sabor Katracho",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Muñeca's Kitchen - Honduras & Salvamex Kitchen",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Koko's Restaurant & Tequila Bar",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Rumba",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Lenox",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "El Patio",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Bad Chancla",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Garzón Latinx Street Food",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Cocina Casera",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Bajón en Seattle",
+    "minority_owned": "Latinx"
+  },
+  {
+    "name": "Hood Famous Cafe + Bar",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Fuji Bakery",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Hello Em Viet Coffee & Roastery",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Phin Coffee House",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Boon Boona Coffee",
+    "minority_owned": "Black"
+  },
+  {
+    "name": "Kilig",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Archipelago",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Stateside",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Revel",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Kedai Makan",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Kamonegi",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Tamari Bar",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "Tsukushinbo",
+    "minority_owned": "Asian"
+  },
+  {
+    "name": "U:Don Fresh Japanese Noodle Station",
     "minority_owned": "Asian"
   }
 ]
