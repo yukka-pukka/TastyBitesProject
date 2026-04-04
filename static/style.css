@@ -17,6 +17,7 @@ body {
 
 .corner-img {
   position: absolute;
+
   width: 350px;
   height: auto;
   z-index: -1;
