@@ -44,9 +44,16 @@
           <!-- 📍 {{ r.address }}<br /> -->
           Rating: {{ r.rating }} | Distance: {{ r.distance_km }} km | Score: {{
           r.score }}
-        </li>
+          {% if username %}
+          <form action="/favorite/toggle" method="post" style="display:inline;">
+           <input type="hidden" name="restaurant_json" value='{{ r | tojson }}' />
+           <button type="submit" style="background:none; border:none; cursor:pointer; font-size:1.2em;">
+            {% if r.name in fav_names %}❤️{% else %}🤍{% endif %}
+          </button>
+          </form>
+         {% endif %}
+         </li>
         {% endfor %}
-      </ul>
       {% else %}
       <p>No restaurants found in this area.</p>
       {% endif %}

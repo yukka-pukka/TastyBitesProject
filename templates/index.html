@@ -44,6 +44,7 @@
       <div class="user-auth" style="margin-top: 20px; text-align: center">
         {% if username %}
         <p>Logged in as: <strong>{{ username }}</strong></p>
+        <a href="/favorites">❤️ My Favorites</a> |
         <a href="/logout" style="color: red; font-weight: bold">Logout</a>
         {% else %}
         <p><a href="/login">Login</a> | <a href="/register">Register</a></p>

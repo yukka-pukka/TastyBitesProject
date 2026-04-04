@@ -26,3 +26,13 @@ class Review(Base):
     restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
     user = relationship("User")
     restaurant = relationship("Restaurant")
+
+class Favorite(Base):
+    __tablename__ = "favorites"
+    id = Column(Integer, primary_key=True)
+    username = Column(String, ForeignKey("users.username"))
+    restaurant_name = Column(String)
+    category = Column(String)
+    address = Column(String)
+    rating = Column(Float)
+    minority_owned = Column(String)

@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 import crud, auth, models
 from database import engine, get_db
 from config import YELP_API_KEY, GOOGLE_MAPS_API_KEY 
+import json
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -64,9 +65,13 @@ def logout():
     return res
 
 @app.get("/search")
-def search_results(request: Request, lat: float = 47.6062, lon: float = -122.3321, minority_owned: str = None):
+def search_results(request: Request, lat: float = 47.6062, lon: float = -122.3321, minority_owned: str = None, db: Session = Depends(get_db)):
     from utils import get_nearby_ranked
+    username = request.cookies.get("username")
     results = get_nearby_ranked(lat, lon, radius_m=5000, minority_owned=minority_owned)
+    fav_names = set()
+    if username:
+        fav_names = {f.restaurant_name for f in crud.get_favorites(db, username)}
     return templates.TemplateResponse(
         request=request,
         name="search_results.html", 
@@ -74,7 +79,33 @@ def search_results(request: Request, lat: float = 47.6062, lon: float = -122.332
             "request": request, 
             "restaurants": results, 
             "minority_owned": minority_owned,
-            "google_maps_key": GOOGLE_MAPS_API_KEY
+            "google_maps_key": GOOGLE_MAPS_API_KEY,
+            "username": username, 
+            "fav_names": fav_names
         
         }
 )
+
+@app.post("/favorite/toggle")
+def toggle_favorite(request: Request, restaurant_json: str = Form(...), db: Session = Depends(get_db)):
+    username = request.cookies.get("username")
+    if not username:
+        return RedirectResponse("/login", status_code=303)
+    restaurant = json.loads(restaurant_json)
+    if crud.is_favorite(db, username, restaurant["name"]):
+        crud.remove_favorite(db, username, restaurant["name"])
+    else:
+        crud.add_favorite(db, username, restaurant)
+    return RedirectResponse("/search", status_code=303)
+
+@app.get("/favorites")
+def favorites_page(request: Request, db: Session = Depends(get_db)):
+    username = request.cookies.get("username")
+    if not username:
+        return RedirectResponse("/login", status_code=303)
+    favs = crud.get_favorites(db, username)
+    return templates.TemplateResponse(
+        request=request,
+        name="favorites.html",
+        context={"username": username, "favorites": favs}
+    )
