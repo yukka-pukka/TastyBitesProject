@@ -7,7 +7,7 @@ YELP_API_KEY = 'unksOTGmrK1Je7maJwHNmXehQnchaSCCZwKyn-lx_u5dkj_DVfKayIqL6vyWxCo7
 
 # Auth / JWT
 SECRET_KEY = secrets.token_hex(32)
-ALGORITHM = "HS256"  # standard JWT algorithm
-ACCESS_TOKEN_EXPIRE_MINUTES = 60  # optional, if using JWT
+ALGORITHM = "HS256"  
+ACCESS_TOKEN_EXPIRE_MINUTES = 60  
 
-
+GOOGLE_MAPS_API_KEY = "AIzaSyB83H91nCB3m2OomaeejNhfWJBz6uGDBXI"

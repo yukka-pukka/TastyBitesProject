@@ -6,6 +6,7 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 import crud, auth, models
 from database import engine, get_db
+from config import YELP_API_KEY, GOOGLE_MAPS_API_KEY 
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -64,8 +65,16 @@ def logout():
 
 @app.get("/search")
 def search_results(request: Request, lat: float = 47.6062, lon: float = -122.3321, minority_owned: str = None):
-    from utils import get_nearby_ranked  
-    print("🔥 SEARCH ENDPOINT HIT")
+    from utils import get_nearby_ranked
     results = get_nearby_ranked(lat, lon, radius_m=5000, minority_owned=minority_owned)
-    return templates.TemplateResponse(request=request,name="search_results.html", context={"request": request, "restaurants": results, "minority_owned": minority_owned}
+    return templates.TemplateResponse(
+        request=request,
+        name="search_results.html", 
+        context={
+            "request": request, 
+            "restaurants": results, 
+            "minority_owned": minority_owned,
+            "google_maps_key": GOOGLE_MAPS_API_KEY
+        
+        }
 )

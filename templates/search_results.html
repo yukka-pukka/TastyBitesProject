@@ -3,18 +3,32 @@
   <head>
     <title>TastyBites - Search Results</title>
     <link rel="stylesheet" href="/static/style.css" />
+    <style>
+      #map {
+        height: 400px;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
       <h1>Restaurants Near You</h1>
+
       {% if minority_owned %}
       <h3>Filtered by: {{ minority_owned }}-owned</h3>
-      {% endif %} {% if restaurants %}
+      {% endif %}
+
+      <div id="map"></div>
+
+      {% if restaurants %}
+
       <ul class="results">
         {% for r in restaurants %}
         <li>
           <strong>{{ r.name }}</strong> - {{ r.category }} - {{ r.minority_owned
           }}-owned<br />
+          📍 {{ r.address }}<br />
           Rating: {{ r.rating }} | Distance: {{ r.distance_km }} km | Score: {{
           r.score }}
         </li>
@@ -25,5 +39,41 @@
       {% endif %}
       <a href="/">Back Home</a>
     </div>
+    <script>
+      const restaurantData = {{ restaurants | tojson }};
+
+
+      async function initMap() {
+        const seattle = { lat: 47.6062, lng: -122.3321 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 13,
+          center: seattle,
+        });
+
+        const geocoder = new google.maps.Geocoder();
+
+        for (const r of restaurantData) {
+          geocoder.geocode({ address: r.address }, (results, status) => {
+            if (status === "OK") {
+              const marker = new google.maps.Marker({
+                map,
+                position: results[0].geometry.location,
+                title: r.name,
+              });
+              const infoWindow = new google.maps.InfoWindow({
+                content: `<strong>${r.name}</strong><br/>${r.address}`
+              });
+              marker.addListener("click", () => infoWindow.open(map, marker));
+            }
+          });
+        }
+      }
+    </script>
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap"
+      async
+      defer
+    ></script>
   </body>
 </html>
