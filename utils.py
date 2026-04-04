@@ -19,7 +19,6 @@ def haversine(lat1, lon1, lat2, lon2):
         sin(dlat / 2) ** 2
         + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
     )
-
     return 2 * 6371 * asin(sqrt(a))
 
 
@@ -79,28 +78,6 @@ def fetch_yelp_restaurants(lat, lon, term="restaurant", limit=20):
 
     return restaurants
 
-# MINORITY_LIST = [
-#     {"name": "Meskel", "minority_owned": "Black"},
-#     {"name": "Fat's Chicken and Waffles", "minority_owned": "Black"},
-#     {"name": "Habesha Cafe", "minority_owned": "Black"},
-#     {"name": "Island Soul", "minority_owned": "Black"},
-#     {"name": "Simply Soulful", "minority_owned": "Black"},
-#     {"name": "Cafe Selam", "minority_owned": "Black"},
-#     {"name": "Taste of the Caribbean", "minority_owned": "Black"},
-#     {"name": "The Comfort Zone", "minority_owned": "Black"},
-#     {"name": "Mama Sambusa Kitchen", "minority_owned": "Black"},
-#     {"name": "Osteria la Spiga", "minority_owned": "Black"},
-#     {"name": "Cafe Campagne", "minority_owned": "Black"},
-#     {"name": "Boon Boona Coffee", "minority_owned": "Black"},
-#     {"name": "Lenox", "minority_owned": "Black"},
-#     {"name": "Métier Brewing Company", "minority_owned": "Black"},
-#     {"name": "Pizza by Ruffin", "minority_owned": "Black"},
-#     {"name": "Asadero Prime", "minority_owned": "Latinx"},
-#     {"name": "Westman’s Bagel & Coffee", "minority_owned": "Latinx"},
-#     {"name": "Askatu Bakery", "minority_owned": "Latinx"},
-#     {"name": "Nue", "minority_owned": "Asian"}
-# ]
-
 DATA_DIR = Path(__file__).parent / "data"
 
 try:
@@ -110,10 +87,9 @@ except FileNotFoundError:
     print("⚠️ WARNING: minority_owned_seattle.json not found")
     MINORITY_LIST = []
 
-
 def get_nearby_ranked(lat, lon, radius_m=5000, minority_owned=None):
-    print("DEBUG: get_nearby_ranked called with", lat, lon, radius_m, minority_owned)
-    print("DEBUG: MINORITY_LIST loaded:", MINORITY_LIST)
+    # print("DEBUG: get_nearby_ranked called with", lat, lon, radius_m, minority_owned)
+    # print("DEBUG: MINORITY_LIST loaded:", MINORITY_LIST)
     headers = {"Authorization": f"Bearer {YELP_API_KEY}"}
 
     search_list = MINORITY_LIST
@@ -134,10 +110,10 @@ def get_nearby_ranked(lat, lon, radius_m=5000, minority_owned=None):
             response = requests.get(YELP_URL, headers=headers, params=params)
             response.raise_for_status()
             businesses = response.json().get("businesses", [])
-            print("DEBUG: Yelp returned", [b["name"] for b in businesses])
+            # print("DEBUG: Yelp returned", [b["name"] for b in businesses])
             if businesses:
                 b = businesses[0]
-                print("DEBUG: comparing", normalize(b["name"]), "vs", normalize(entry["name"]))
+                # print("DEBUG: comparing", normalize(b["name"]), "vs", normalize(entry["name"]))
                 yelp_name = normalize(b["name"])
                 entry_name = normalize(entry["name"])
                 if yelp_name in entry_name or entry_name in yelp_name:
