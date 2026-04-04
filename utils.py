@@ -3,6 +3,11 @@ from math import radians, sin, cos, sqrt, asin
 from pathlib import Path
 import requests
 from config import YELP_API_KEY
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+_cache = {}
+CACHE_TTL = 3600  # 1 hour
 
 # Paths 
 DATA_DIR = Path(__file__).parent / "data"
@@ -87,9 +92,49 @@ except FileNotFoundError:
     print("⚠️ WARNING: minority_owned_seattle.json not found")
     MINORITY_LIST = []
 
-def get_nearby_ranked(lat, lon, radius_m=5000, minority_owned=None):
-    # print("DEBUG: get_nearby_ranked called with", lat, lon, radius_m, minority_owned)
-    # print("DEBUG: MINORITY_LIST loaded:", MINORITY_LIST)
+def fetch_one(entry, lat, lon, radius_m, headers):
+    params = {
+        "term": entry["name"],
+        "latitude": lat,
+        "longitude": lon,
+        "radius": int(radius_m),
+        "limit": 1
+    }
+    try:
+        response = requests.get(YELP_URL, headers=headers, params=params)
+        response.raise_for_status()
+        businesses = response.json().get("businesses", [])
+        if businesses:
+            b = businesses[0]
+            yelp_name = normalize(b["name"])
+            entry_name = normalize(entry["name"])
+            if yelp_name in entry_name or entry_name in yelp_name:
+                return {
+                    "name": b["name"],
+                    "address": ", ".join(b["location"]["display_address"]),
+                    "minority_owned": entry["minority_owned"],
+                    "category": b["categories"][0]["title"] if b.get("categories") else "N/A",
+                    "rating": b.get("rating", 0),
+                    "distance_mi": round(b.get("distance", 0) / 1609, 2),
+                    "score": round(compute_score(
+                        b.get("distance", 0) / 1609,
+                        b.get("rating", 0)
+                    ), 4)
+                }
+    except Exception as e:
+        print(f"ERROR fetching {entry['name']}:", e)
+    return None
+
+
+def get_nearby_ranked(lat, lon, radius_m=3219, minority_owned=None):
+     # Check cache first
+    cache_key = f"{lat}_{lon}_{radius_m}_{minority_owned}"
+    if cache_key in _cache:
+        timestamp, results = _cache[cache_key]
+        if time.time() - timestamp < CACHE_TTL:
+            print("DEBUG: returning cached results")
+            return results
+
     headers = {"Authorization": f"Bearer {YELP_API_KEY}"}
 
     search_list = MINORITY_LIST
@@ -97,40 +142,21 @@ def get_nearby_ranked(lat, lon, radius_m=5000, minority_owned=None):
         search_list = [e for e in MINORITY_LIST if e["minority_owned"].lower() == minority_owned.lower()]
 
     filtered = []
-    for entry in search_list:
-        print("DEBUG: searching for", entry["name"])
-        params = {
-            "term": entry["name"],
-            "latitude": lat,
-            "longitude": lon,
-            "radius": int(radius_m),
-            "limit": 1
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = {
+            executor.submit(fetch_one, entry, lat, lon, radius_m, headers): entry
+            for entry in search_list
         }
-        try:
-            response = requests.get(YELP_URL, headers=headers, params=params)
-            response.raise_for_status()
-            businesses = response.json().get("businesses", [])
-            # print("DEBUG: Yelp returned", [b["name"] for b in businesses])
-            if businesses:
-                b = businesses[0]
-                # print("DEBUG: comparing", normalize(b["name"]), "vs", normalize(entry["name"]))
-                yelp_name = normalize(b["name"])
-                entry_name = normalize(entry["name"])
-                if yelp_name in entry_name or entry_name in yelp_name:
-                    filtered.append({
-                        "name": b["name"],
-                        "address": ", ".join(b["location"]["display_address"]),
-                        "minority_owned": entry["minority_owned"],
-                        "category": b["categories"][0]["title"] if b.get("categories") else "N/A",
-                        "rating": b.get("rating", 0),
-                        "distance_km": round(b.get("distance", 0) / 1000, 2),
-                        "score": round(compute_score(
-                            b.get("distance", 0) / 1000,
-                            b.get("rating", 0)
-                        ), 4)
-                    })
-        except Exception as e:
-            print(f"ERROR fetching {entry['name']}:", e)
+        for future in as_completed(futures):
+            result = future.result()
+            if result:
+                filtered.append(result)
+        
+    # Sort by score best first
+    filtered.sort(key=lambda x: x["score"], reverse=True)
 
-    print("DEBUG: filtered results", filtered)
+    # Store in cache
+    _cache[cache_key] = (time.time(), filtered)
+
+    print("debug: filtered results", filtered)
     return filtered
