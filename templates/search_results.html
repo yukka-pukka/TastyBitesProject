@@ -60,33 +60,70 @@
       <a href="/">Back Home</a>
     </div>
     <script>
-      const restaurantData = {{ restaurants | tojson }};
+    const restaurantData = {{ restaurants | tojson }};
+    
+    window._openInfoWindow = null;
+
+    window._closeInfoWindow = function() {
+        if (window._openInfoWindow) {
+            window._openInfoWindow.close();
+            window._openInfoWindow = null;
+        }
+};
 
 
-      async function initMap() {
-        const seattle = { lat: 47.6062, lng: -122.3321 };
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 13,
-          center: seattle,
-        });
+   
+    async function initMap() {
+      const seattle = { lat: 47.6062, lng: -122.3321 };
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 13,
+        center: seattle,
+      });
 
-        const geocoder = new google.maps.Geocoder();
+      const geocoder = new google.maps.Geocoder();
+      let openInfoWindow = null;
 
-        for (const r of restaurantData) {
-          geocoder.geocode({ address: r.address }, (results, status) => {
-            if (status === "OK") {
-              const marker = new google.maps.Marker({
-                map,
-                position: results[0].geometry.location,
-                title: r.name,
-              });
-              const infoWindow = new google.maps.InfoWindow({
-                content: `<strong>${r.name}</strong><br/>${r.address}`
-              });
-              marker.addListener("click", () => infoWindow.open(map, marker));
+      for (const r of restaurantData) {
+        geocoder.geocode({ address: r.address }, (results, status) => {
+          if (status === "OK") {
+            const marker = new google.maps.Marker({
+              map,
+              position: results[0].geometry.location,
+              title: r.name,
+            });
+             const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div style="padding: 5px;">
+                            <strong>${r.name}</strong><br/>
+                            ${r.address}<br/>
+                            <button onclick="window._closeInfoWindow()"
+                                style="margin-top:8px; cursor:pointer; padding: 3px 8px; border-radius: 4px; border: 1px solid #ccc;">
+                                Close
+                            </button>
+                        </div>
+                    `
+                });
+            
+            marker.addListener("click", () => {
+              if (window._openInfoWindow === infoWindow) {
+                    infoWindow.close();
+                    window._openInfoWindow = null;
+              } else {
+                    if (window._openInfoWindow) window._openInfoWindow.close();
+                    infoWindow.open(map, marker);
+                    window._openInfoWindow = infoWindow;
+              }
+          });
+
+            infoWindow.addListener("closeclick", () => {
+                openInfoWindow = null;
+            });
             }
           });
         }
+         map.addListener("click", () => {
+          window._closeInfoWindow();
+    });
       }
     </script>
 
