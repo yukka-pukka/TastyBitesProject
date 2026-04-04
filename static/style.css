@@ -99,3 +99,13 @@ button:hover {
   color: #000000;
   text-decoration: underline;
 }
+
+ul.results {
+  list-style: none;
+  padding: 0;
+}
+
+ul.results li {
+  margin-bottom: 15px;
+  text-align: center;
+}

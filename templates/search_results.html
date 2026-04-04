@@ -35,107 +35,147 @@
       <div id="map"></div>
 
       {% if restaurants %}
-
       <ul class="results">
         {% for r in restaurants %}
-        <li>
-          <strong>
-          <a href="#map" onclick="window._focusRestaurant('{{ r.name }}')"
-            style="cursor:pointer; color: #1a73e8; text-decoration: underline;">
-              {{ r.name }}
-          </a>
-          </strong> - {{ r.category }} - {{ r.minority_owned }}-owned<br />
-          <!-- 📍 {{ r.address }}<br /> -->
-          Rating: {{ r.rating }} | Distance: {{ r.distance_mi }} km | Score: {{
-          r.score }}
-          {% if username %}
-          <form action="/favorite/toggle" method="post" style="display:inline;">
-           <input type="hidden" name="restaurant_json" value='{{ r | tojson }}' />
-           <button type="submit" style="background:none; border:none; cursor:pointer; font-size:1.2em;">
-            {% if r.name in fav_names %}❤️{% else %}🤍{% endif %}
-          </button>
-          </form>
-         {% endif %}
-         </li>
+        <li style="margin-bottom: 10px; text-align: center">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 5px;
+            "
+          >
+            <strong>
+              <a
+                href="#map"
+                onclick="window._focusRestaurant('{{ r.name }}')"
+                style="
+                  cursor: pointer;
+                  color: #1a73e8;
+                  text-decoration: underline;
+                "
+              >
+                {{ r.name }}
+              </a>
+            </strong>
+            {% if username %}
+            <form
+              action="/favorite/toggle"
+              method="post"
+              style="display: inline-flex; margin: 0; padding: 0"
+            >
+              <input
+                type="hidden"
+                name="restaurant_json"
+                value="{{ r | tojson }}"
+              />
+              <button
+                type="submit"
+                style="
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                  font-size: 1.2em;
+                  padding: 0;
+                "
+              >
+                {% if r.name in fav_names %}❤️{% else %}🤍{% endif %}
+              </button>
+            </form>
+            {% endif %}
+          </div>
+          <div>{{ r.category }} - {{ r.minority_owned }}-owned</div>
+          <div>
+            Rating: {{ r.rating }} | Distance: {{ r.distance_mi }} mi | Score:
+            {{ r.score }}
+          </div>
+        </li>
         {% endfor %}
+      </ul>
       {% else %}
       <p>No restaurants found in this area.</p>
       {% endif %}
+
       <a href="/">Back Home</a>
     </div>
 
     <script>
-    const restaurantData = {{ restaurants | tojson }};
-    window._markers = {};
-    window._openInfoWindow = null;
+      const restaurantData = {{ restaurants | tojson }};
+      window._markers = {};
+      window._openInfoWindow = null;
 
-    window._closeInfoWindow = function() {
+      window._closeInfoWindow = function() {
         if (window._openInfoWindow) {
-            window._openInfoWindow.close();
-            window._openInfoWindow = null;
+          window._openInfoWindow.close();
+          window._openInfoWindow = null;
         }
-};
-    window._focusRestaurant = function(name) {  // ← new function
-    const data = window._markers[name];
-    if (!data) return;
+      };
+
+      window._focusRestaurant = function(name) {
+        const data = window._markers[name];
+        if (!data) return;
         data.map.panTo(data.marker.getPosition());
         data.map.setZoom(15);
-    if (window._openInfoWindow) window._openInfoWindow.close();
+        if (window._openInfoWindow) window._openInfoWindow.close();
         data.infoWindow.open(data.map, data.marker);
         window._openInfoWindow = data.infoWindow;
-    };
+      };
 
-   
-    async function initMap() {
-      const seattle = { lat: 47.6062, lng: -122.3321 };
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 13,
-        center: seattle,
-      });
+      async function initMap() {
+        const seattle = { lat: 47.6062, lng: -122.3321 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 13,
+          center: seattle,
+        });
 
-      const geocoder = new google.maps.Geocoder();
+        const geocoder = new google.maps.Geocoder();
 
-      for (const r of restaurantData) {
-        geocoder.geocode({ address: r.address }, (results, status) => {
-          if (status === "OK") {
-            const marker = new google.maps.Marker({
+        for (const r of restaurantData) {
+          geocoder.geocode({ address: r.address }, (results, status) => {
+            if (status === "OK") {
+              const marker = new google.maps.Marker({
                 map,
                 position: results[0].geometry.location,
                 title: r.name,
-            });
-             const infoWindow = new google.maps.InfoWindow({
-                content: `
-                    <div style="padding: 5px;">
-                        <strong>${r.name}</strong><br/>
-                        ${r.address}<br/>
-                        <button onclick="window._closeInfoWindow()"
-                            style="margin-top:8px; cursor:pointer; padding: 3px 8px; border-radius: 4px; border: 1px solid #ccc;">
-                            Close
-                        </button>
-                    </div>
-                    `
-                });
-
-              // Store marker data for external access
-            window._markers[r.name] = { marker, infoWindow, map };
-
-            marker.addListener("click", () => {
-                  if (window._openInfoWindow === infoWindow) {
-                      infoWindow.close();
-                      window._openInfoWindow = null;
-                  } else {
-                      if (window._openInfoWindow) window._openInfoWindow.close();
-                      infoWindow.open(map, marker);
-                      window._openInfoWindow = infoWindow;
-                  }
               });
-              infoWindow.addListener("closeclick", () => {
+              const infoWindow = new google.maps.InfoWindow({
+                content: `
+                  <div style="padding: 5px;">
+                    <strong>${r.name}</strong><br/>
+                    ${r.address}<br/>
+                    <button onclick="window._closeInfoWindow()"
+                      style="margin-top:8px; cursor:pointer; padding: 3px 8px; border-radius: 4px; border: 1px solid #ccc;">
+                      Close
+                    </button>
+                  </div>
+                `
+              });
+
+              window._markers[r.name] = { marker, infoWindow, map };
+
+              marker.addListener("click", () => {
+                if (window._openInfoWindow === infoWindow) {
+                  infoWindow.close();
                   window._openInfoWindow = null;
+                } else {
+                  if (window._openInfoWindow) window._openInfoWindow.close();
+                  infoWindow.open(map, marker);
+                  window._openInfoWindow = infoWindow;
+                }
+              });
+
+              infoWindow.addListener("closeclick", () => {
+                window._openInfoWindow = null;
               });
             }
+          });
+        }
+
+        map.addListener("click", () => {
+          window._closeInfoWindow();
         });
-     }
-    }          
+      }
     </script>
 
     <script
