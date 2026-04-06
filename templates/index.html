@@ -5,22 +5,6 @@
     <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}" />
   </head>
   <body>
-    <img
-      src="{{ url_for('static', path='map.jpg') }}"
-      class="corner-img top-left"
-    />
-    <img
-      src="{{ url_for('static', path='top_right.png') }}"
-      class="corner-img top-right"
-    />
-    <img
-      src="{{ url_for('static', path='bottom_left.png') }}"
-      class="corner-img bottom-left"
-    />
-    <img
-      src="{{ url_for('static', path='seattle_2.jpg') }}"
-      class="corner-img bottom-right"
-    />
     <h1>Welcome to TastyBites!</h1>
     <div class="container">
       <p>Discover minority-owned restaurants near you.</p>
@@ -51,5 +35,21 @@
         {% endif %}
       </div>
     </div>
+    <img
+      src="{{ url_for('static', path='map.jpg') }}"
+      class="corner-img top-left"
+    />
+    <img
+      src="{{ url_for('static', path='top_right.png') }}"
+      class="corner-img top-right"
+    />
+    <img
+      src="{{ url_for('static', path='seattle_5.jpeg') }}"
+      class="corner-img bottom-left"
+    />
+    <img
+      src="{{ url_for('static', path='seattle_2.jpg') }}"
+      class="corner-img bottom-right"
+    />
   </body>
 </html>
