@@ -193,7 +193,7 @@ pytest tests/ -v
 
 Frontend tests are run manually in the browser console. A `runTests()` function in `search_results.html` verifies that restaurant data loads correctly, required functions exist, and the map state is initialized properly.
 
-# Extract JS blocks and execute them with Node.js
+### Extract JS blocks and execute them with Node.js
 sed -n '/```js/,/```/p' test_js_manual.md | sed 's/```js//g;s/```//g' | node
 
 
