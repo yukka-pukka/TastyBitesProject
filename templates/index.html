@@ -5,51 +5,53 @@
     <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}" />
   </head>
   <body>
-    <h1>Welcome to TastyBites!</h1>
-    <div class="container">
-      <p>Discover minority-owned restaurants near you.</p>
-
-      <form action="/search" method="get" class="search-form">
-        <label>Filter by minority-owned:</label>
-        <select name="minority_owned">
-          <option value="">All</option>
-          <option value="Black">Black-owned</option>
-          <option value="Latinx">Latinx-owned</option>
-          <option value="Asian">Asian-owned</option>
-          <option value="LGBTQ+">LGBTQ+-owned</option>
-        </select>
-        <input type="hidden" name="lat" value="47.6062" />
-        <input type="hidden" name="lon" value="-122.3321" />
-        <button type="submit">Search</button>
-      </form>
-
-      <hr style="margin-top: 40px; border: 0.5px solid rgba(0, 0, 0, 0.1)" />
-
-      <div class="user-auth" style="margin-top: 20px; text-align: center">
-        {% if username %}
-        <p>Logged in as: <strong>{{ username }}</strong></p>
-        <a href="/favorites">❤️ My Favorites</a> |
-        <a href="/logout" style="color: red; font-weight: bold">Logout</a>
-        {% else %}
-        <p><a href="/login">Login</a> | <a href="/register">Register</a></p>
-        {% endif %}
-      </div>
-    </div>
     <img
       src="{{ url_for('static', path='map.jpg') }}"
       class="corner-img top-left"
     />
     <img
-      src="{{ url_for('static', path='top_right.png') }}"
+      src="{{ url_for('static', path='seattle_7.jpg') }}"
       class="corner-img top-right"
     />
     <img
-      src="{{ url_for('static', path='seattle_5.jpeg') }}"
+      src="{{ url_for('static', path='seattle_6.jpg') }}"
       class="corner-img bottom-left"
     />
     <img
       src="{{ url_for('static', path='seattle_2.jpg') }}"
       class="corner-img bottom-right"
     />
+    <div class="main-content">
+      <h1>Welcome to TastyBites!</h1>
+      <div class="container">
+        <p>Discover minority-owned restaurants near you.</p>
+
+        <form action="/search" method="get" class="search-form">
+          <label>Filter by minority-owned:</label>
+          <select name="minority_owned">
+            <option value="">All</option>
+            <option value="Black">Black-owned</option>
+            <option value="Latinx">Latinx-owned</option>
+            <option value="Asian">Asian-owned</option>
+            <option value="LGBTQ+">LGBTQ+-owned</option>
+          </select>
+          <input type="hidden" name="lat" value="47.6062" />
+          <input type="hidden" name="lon" value="-122.3321" />
+          <button type="submit">Search</button>
+        </form>
+
+        <hr style="margin-top: 40px; border: 0.5px solid rgba(0, 0, 0, 0.1)" />
+
+        <div class="user-auth" style="margin-top: 20px; text-align: center">
+          {% if username %}
+          <p>Logged in as: <strong>{{ username }}</strong></p>
+          <a href="/favorites">❤️ My Favorites</a> |
+          <a href="/logout" style="color: red; font-weight: bold">Logout</a>
+          {% else %}
+          <p><a href="/login">Login</a> | <a href="/register">Register</a></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </body>
 </html>

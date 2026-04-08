@@ -1,4 +1,6 @@
 import os
+import json
+import base64
 from fastapi import FastAPI, Request, Form, Response, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -7,15 +9,15 @@ from sqlalchemy.orm import Session
 import crud, auth, models
 from database import engine, get_db
 from config import YELP_API_KEY, GOOGLE_MAPS_API_KEY 
-import json
+
+
+current_dir = os.path.dirname(os.path.realpath(__file__))
+templates = Jinja2Templates(directory=os.path.join(current_dir, "templates"))
+templates.env.filters['b64encode'] = lambda s: base64.b64encode(s.encode()).decode()
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="TastyBites API")
-
-current_dir = os.path.dirname(os.path.realpath(__file__))
-templates = Jinja2Templates(directory=os.path.join(current_dir, "templates"))
-
 app.mount("/static", StaticFiles(directory=os.path.join(current_dir, "static")), name="static")
 
 
@@ -91,12 +93,14 @@ def toggle_favorite(request: Request, restaurant_json: str = Form(...), db: Sess
     username = request.cookies.get("username")
     if not username:
         return RedirectResponse("/login", status_code=303)
-    restaurant = json.loads(restaurant_json)
+    print(f"DEBUG restaurant_json repr: {repr(restaurant_json[:100])}")
+    restaurant = json.loads(base64.b64decode(restaurant_json).decode())
     if crud.is_favorite(db, username, restaurant["name"]):
         crud.remove_favorite(db, username, restaurant["name"])
     else:
         crud.add_favorite(db, username, restaurant)
     return RedirectResponse("/search", status_code=303)
+
 
 @app.get("/favorites")
 def favorites_page(request: Request, db: Session = Depends(get_db)):

@@ -18,15 +18,6 @@ class Restaurant(Base):
     rating = Column(Float, default=0)
     minority_owned = Column(String) 
 
-class Review(Base):
-    __tablename__ = "reviews"
-    id = Column(Integer, primary_key=True)
-    rating = Column(Float)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    restaurant_id = Column(Integer, ForeignKey("restaurants.id"))
-    user = relationship("User")
-    restaurant = relationship("Restaurant")
-
 class Favorite(Base):
     __tablename__ = "favorites"
     id = Column(Integer, primary_key=True)

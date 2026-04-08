@@ -60,6 +60,7 @@
               </a>
             </strong>
             {% if username %}
+
             <form
               action="/favorite/toggle"
               method="post"
@@ -68,7 +69,7 @@
               <input
                 type="hidden"
                 name="restaurant_json"
-                value="{{ r | tojson }}"
+                value="{{ r | tojson | b64encode }}"
               />
               <button
                 type="submit"
@@ -101,7 +102,7 @@
     </div>
 
     <script>
-      const restaurantData = {{ restaurants | tojson }};
+      const restaurantData = {{ restaurants | tojson | safe }};
       window._markers = {};
       window._openInfoWindow = null;
 
